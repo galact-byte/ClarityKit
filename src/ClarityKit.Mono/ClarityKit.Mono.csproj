@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>ClarityKit.Mono</AssemblyName>
+    <Product>ClarityKit.Mono</Product>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <!-- 目标游戏的 Managed 目录与 BepInEx\core 目录由 build-mono.ps1 通过
+         -p:ManagedDir=... -p:BepInExCore=... 注入，工程内不硬编码任何具体路径。 -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Shared\Keywords.cs" Link="Keywords.cs" />
+  </ItemGroup>
+
+  <!-- 仅引用 BepInEx 与 UnityEngine 核心模块，不引用任何游戏专属 Assembly-CSharp，
+       因此一个 dll 可跨 Mono 游戏使用。全部 Private=false，不复制到输出。 -->
+  <ItemGroup>
+    <Reference Include="BepInEx">
+      <HintPath>$(BepInExCore)\BepInEx.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>$(BepInExCore)\0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>$(ManagedDir)\UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(ManagedDir)\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+</Project>
