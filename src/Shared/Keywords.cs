@@ -38,6 +38,16 @@ namespace ClarityKit.Shared
             "_CensorSize",
             "_Size",
             "_Density",
+            // 补充常见于 Shader Graph 马赛克的命名（块数 / 像素数 / 单元格 / 强度）
+            "_Block",
+            "_BlockCount",
+            "_Pixel",
+            "_PixelCount",
+            "_Cell",
+            "_CellSize",
+            "_Amount",
+            "_Resolution",
+            "_Tiling",
         };
 
         /// <summary>
@@ -69,7 +79,10 @@ namespace ClarityKit.Shared
         public static string[] SplitCsv(string csv)
         {
             if (string.IsNullOrEmpty(csv)) return Array.Empty<string>();
-            string[] parts = csv.Split(',');
+            // 注意：必须用 char[] 重载 Split(params char[])，不能写 csv.Split(',')。
+            // 后者会被编译成 .NET Standard 2.1 才有的 Split(char, StringSplitOptions)，
+            // 在 Unity 2020/旧 Mono 运行时缺失该重载 → 运行期 MissingMethodException。
+            string[] parts = csv.Split(new char[] { ',' });
             int n = 0;
             for (int i = 0; i < parts.Length; i++)
             {
