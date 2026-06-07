@@ -15,6 +15,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import detector
 import bepinex
 import plugin
+import mosaic_probe
 
 
 class ClarityApp:
@@ -43,6 +44,7 @@ class ClarityApp:
         self.v_arch = self._info_row(info, "架构", 1)
         self.v_unity = self._info_row(info, "Unity 版本", 2)
         self.v_bepinex = self._info_row(info, "BepInEx", 3)
+        self.v_mosaic = self._info_row(info, "马赛克机制", 4)
 
         ops = ttk.Frame(root)
         ops.pack(fill="x", **pad)
@@ -119,6 +121,31 @@ class ClarityApp:
             self.log("  注意: " + n)
         self.status.set(str(info["backend"]) + " · " + str(info["arch"]) + " · Unity " + str(info["unity_version"]))
         self._set_ops(True)
+        self._probe_mosaic(gd)
+
+    def _probe_mosaic(self, gd):
+        """后台静态探测马赛克机制（装插件前给预期），避免阻塞 UI。"""
+        self.v_mosaic.set("探测中…")
+
+        def worker():
+            try:
+                pr = mosaic_probe.probe(gd)
+                tag = mosaic_probe.summarize(pr)
+            except Exception as e:
+                pr, tag = None, "探测失败: " + str(e)
+
+            def upd():
+                self.v_mosaic.set(tag)
+                if pr:
+                    for ev in pr["evidence"]:
+                        self.log("  马赛克探针: " + ev)
+                    if pr.get("hint"):
+                        self.log("  → " + pr["hint"])
+                    if pr.get("removable") is False:
+                        self.log("  ⚠ 这游戏的打码无法用 ClarityKit 去除（烧进贴图/无码）。")
+            self.root.after(0, upd)
+
+        threading.Thread(target=worker, daemon=True).start()
 
     def _set_ops(self, enabled):
         st = "normal" if (enabled and not self.busy) else "disabled"
