@@ -6,6 +6,29 @@ ClarityKit does not modify any game asset. It works purely at runtime: it scans 
 
 > **Scope**: effective only when the effect is a **runtime overlay or shader** (no image reconstruction needed). Effects baked directly into source textures are out of scope.
 
+## Compatibility
+
+**Works when:**
+- The game is built with **Unity** — either the **Mono** or **IL2CPP** scripting backend
+- The effect is applied at **runtime** as a separate overlay layer or a pixelation **shader** (rendered on top of the underlying content)
+
+**Won't help when:**
+- The effect is **baked into the source textures** — recovering that would need AI inpainting, which this tool does not do
+- The game isn't Unity, or its code is heavily obfuscated / its assets are encrypted
+- *(IL2CPP only)* you can't run the game at least once to let BepInEx generate the `interop` assemblies
+
+## First-time setup — generate BepInEx templates
+
+This repo does **not** bundle BepInEx itself (it would be large, and should come from your own games rather than be redistributed). Before the GUI's **"Install BepInEx"** step can work, generate the templates **once** from your own reference games:
+
+```powershell
+python tool/make_templates.py "<a Mono game root>" "<an IL2CPP game root>"
+```
+
+The Mono reference game must already have **BepInEx 5** installed, the IL2CPP one **BepInEx 6**. This produces `tool/templates/` locally (git-ignored, never published).
+
+> Alternatively, just install BepInEx into your target game manually and use only the plugin-install step — templates are needed *only* for the automated BepInEx installer.
+
 ## Two flavors
 
 | Backend | Project | BepInEx | Target |
