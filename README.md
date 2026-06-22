@@ -60,6 +60,20 @@ pwsh build/build-il2cpp.ps1 -GameDir "X:\path\to\Il2CppGameRoot"
 
 Each script compiles the plugin against the target game and copies the dll into its `BepInEx/plugins`.
 
+## Portable package
+
+To create a clean zip for end users:
+
+```powershell
+pwsh build/package.ps1 -Version v0.5.1
+```
+
+The package is written to `dist/ClarityKit-v0.5.1.zip` and contains only the runnable tool files: `start.bat`, `README.md`, Python scripts, and `tool/assets`. It intentionally does not include `src/`, `build/`, `.git`, or generated caches. IL2CPP plugins are still compiled on the user's machine against the selected game's own `BepInEx/interop` assemblies.
+
+For IL2CPP games, install or confirm BepInEx first, launch the game once so BepInEx can generate `BepInEx/interop`, then return to ClarityKit and install the plugin. Mono games can use the bundled `ClarityKit.Mono.dll` directly.
+
+The GitHub Actions workflow also builds this zip automatically. Pushing a `v*` tag, such as `v0.5.2`, creates a GitHub Release and attaches the portable zip.
+
 ## Configuration
 
 After the first launch, edit `BepInEx/config/com.clarity.kit.*.cfg`:
@@ -79,3 +93,9 @@ After the first launch, edit `BepInEx/config/com.clarity.kit.*.cfg`:
 
 - .NET SDK (for `dotnet build`)
 - BepInEx already installed in the target game (5.x for Mono, 6.x for IL2CPP)
+
+## License
+
+ClarityKit is released under the MIT License. See `LICENSE` for details.
+
+BepInEx, Harmony, Unity, and game-specific assemblies are third-party components governed by their own licenses. ClarityKit does not redistribute game files or IL2CPP `interop` assemblies.
