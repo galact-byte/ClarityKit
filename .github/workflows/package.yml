@@ -1,0 +1,60 @@
+name: Package
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - "v*"
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check Python syntax
+        shell: pwsh
+        run: |
+          python -c "import ast, pathlib; files=[p for p in pathlib.Path('tool').glob('*.py')]; [ast.parse(p.read_text(encoding='utf-8'), filename=str(p)) for p in files]; print(f'syntax ok: {len(files)}')"
+
+      - name: Build portable zip
+        shell: pwsh
+        run: |
+          $version = if ($env:GITHUB_REF_TYPE -eq 'tag') { $env:GITHUB_REF_NAME } else { $env:GITHUB_SHA.Substring(0, 7) }
+          ./build/package.ps1 -Version $version
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ClarityKit-portable
+          path: dist/ClarityKit-*.zip
+          if-no-files-found: error
+
+      - name: Create GitHub release
+        if: github.ref_type == 'tag'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $zip = Get-ChildItem -Path dist -Filter 'ClarityKit-*.zip' | Select-Object -First 1
+          if (-not $zip) {
+            throw 'Package zip was not found.'
+          }
+
+          gh release create $env:GITHUB_REF_NAME $zip.FullName `
+            --title $env:GITHUB_REF_NAME `
+            --notes "Portable ClarityKit package for $env:GITHUB_REF_NAME."

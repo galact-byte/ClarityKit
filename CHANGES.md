@@ -1,5 +1,15 @@
 # Changelog — ClarityKit
 
+## Packaging
+
+### v0.5.2
+- Added `build/package.ps1` to produce a clean portable zip containing the runnable GUI tool, `start.bat`, `README.md`, and required `tool/assets`.
+- Added `.github/workflows/package.yml` to run Python syntax checks, upload the portable zip as a GitHub Actions artifact, and create a GitHub Release with the zip when a `v*` tag is pushed.
+- Documented the portable package flow and IL2CPP first-run requirement in `README.md`.
+- Added `dist/` to `.gitignore` so generated zip files are not committed.
+- Added the MIT `LICENSE` file and included it in portable zip packages.
+- Verified with `python` AST syntax checks and a local `build/package.ps1` package build.
+
 ## Plugin engine
 
 ### v0.5.1
