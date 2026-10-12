@@ -97,7 +97,7 @@ if (Test-Path -LiteralPath $zipPath) {
 
 New-Item -ItemType Directory -Force -Path $stageDir | Out-Null
 
-$rootFiles = @("README.md", "LICENSE", "start.bat")
+$rootFiles = @("README.md", "LICENSE", "NOTICE", "start.bat")
 foreach ($file in $rootFiles) {
     $source = Join-Path $repoRootPath $file
     if (-not (Test-Path -LiteralPath $source)) {
@@ -105,6 +105,12 @@ foreach ($file in $rootFiles) {
     }
     Copy-Item -LiteralPath $source -Destination $stageDir -Force
 }
+
+$licenseSource = Join-Path $repoRootPath "licenses"
+if (-not (Test-Path -LiteralPath $licenseSource)) {
+    throw "Required directory is missing: licenses"
+}
+Copy-Item -LiteralPath $licenseSource -Destination $stageDir -Recurse -Force
 
 $toolSource = Join-Path $repoRootPath "tool"
 $toolDest = Join-Path $stageDir "tool"

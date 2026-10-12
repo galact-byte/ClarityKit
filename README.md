@@ -94,8 +94,10 @@ After the first launch, edit `BepInEx/config/com.clarity.kit.*.cfg`:
 - .NET SDK (for `dotnet build`)
 - BepInEx already installed in the target game (5.x for Mono, 6.x for IL2CPP)
 
-## License
+## 许可与商业授权
 
-ClarityKit is released under the MIT License. See `LICENSE` for details.
+个人与公司可免费用于合法内部工作；免费分发须保留署名和许可并标识修改版。对外售卖、集成进收费产品或提供以软件功能为直接收费内容的服务，须另行取得书面商业授权。
 
-BepInEx, Harmony, Unity, and game-specific assemblies are third-party components governed by their own licenses. ClarityKit does not redistribute game files or IL2CPP `interop` assemblies.
+完整条款见 [LICENSE](LICENSE)，版权、第三方例外和旧版 MIT 权利见 [NOTICE](NOTICE)。这是自定义源码可用许可，不是 MIT 或 OSI 开源许可；此前合法取得的 MIT 版本及内容仍享有原许可权利。商业授权请通过本官方仓库联系维护者。
+
+BepInEx、Harmony、Unity 和游戏程序集仍适用各自许可。本项目不分发游戏文件或 IL2CPP `interop` 程序集，也不因此取得它们的重新授权权利。

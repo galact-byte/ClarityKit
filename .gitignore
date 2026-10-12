@@ -12,3 +12,9 @@ tool/templates/
 # Python
 __pycache__/
 *.pyc
+
+# 本地 AI 配置
+CLAUDE.md
+GEMINI.md
+AGENTS.md
+.omc/

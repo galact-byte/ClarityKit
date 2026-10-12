@@ -1,5 +1,11 @@
 # Changelog — ClarityKit
 
+## 未发布 — 许可与商业授权边界
+
+- 原创且有权授权的部分采用 `LicenseRef-Galact-Internal-Use-1.0`：允许合法个人及公司内部自用、免费分发；对外售卖、集成收费产品或提供直接收费的软件服务须书面授权。
+- `LICENSE`、README 和 `NOTICE` 统一声明；历史 MIT 正文原样保存于 `licenses/LEGACY-MIT.txt`。BepInEx、Harmony、Unity 和游戏内容保留各自权利，旧版 MIT 权利不撤回。
+- 便携 ZIP 携带 NOTICE 及历史许可目录，不改变 GUI 或插件。尚未发布、未触发远端流水线。
+
 ## Packaging
 
 ### v0.5.2
